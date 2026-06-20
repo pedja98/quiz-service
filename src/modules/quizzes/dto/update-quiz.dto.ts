@@ -3,6 +3,7 @@ import { ArrayMinSize, IsArray, IsInt, IsOptional, IsString, ValidateNested } fr
 import { IsDurationString } from '../validators/is-duration-string.validator'
 import { CreateQuestionDto } from 'src/modules/questions/dto/create-question.dto'
 import { UpdateQuestionDto } from 'src/modules/questions/dto/update-question.dto'
+import { IsNumberKeyObject } from '../validators/is-number-key-object.decorator'
 
 export class UpdateQuizDto {
   @IsOptional()
@@ -32,9 +33,6 @@ export class UpdateQuizDto {
   removeQuestionIds?: number[]
 
   @IsOptional()
-  @IsArray()
-  @ArrayMinSize(1)
-  @ValidateNested({ each: true })
-  @Type(() => UpdateQuestionDto)
-  updateQuestions?: UpdateQuestionDto[]
+  @IsNumberKeyObject()
+  updateQuestions?: Record<number, UpdateQuestionDto>
 }

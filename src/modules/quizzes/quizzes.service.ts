@@ -148,7 +148,16 @@ export class QuizzesService {
       quiz.modifyUserId = userId
       await manager.save(quiz)
 
+      const updateQuestionIds = dto.updateQuestions ? Object.keys(dto.updateQuestions).map(Number) : []
+
       if (dto.removeQuestionIds?.length) {
+        const conflicting = dto.removeQuestionIds.filter((rid) => updateQuestionIds.includes(rid))
+        if (conflicting.length) {
+          throw new BadRequestException(
+            `Invalid action attempt: question(s) [${conflicting.join(', ')}] cannot be both removed and updated`,
+          )
+        }
+
         const missing = dto.removeQuestionIds.filter((rid) => !quiz.questions.some((q) => q.id === rid))
         if (missing.length) {
           throw new BadRequestException(`Question(s) [${missing.join(', ')}] do not belong to quiz #${id}`)
@@ -159,11 +168,12 @@ export class QuizzesService {
         quiz.questions = quiz.questions.filter((q) => !dto.removeQuestionIds!.includes(q.id))
       }
 
-      if (dto.updateQuestions?.length) {
-        for (const update of dto.updateQuestions) {
-          const existing = quiz.questions.find((q) => q.id === update.id)
+      if (updateQuestionIds.length) {
+        for (const qId of updateQuestionIds) {
+          const update = dto.updateQuestions![qId]
+          const existing = quiz.questions.find((q) => q.id === qId)
           if (!existing) {
-            throw new BadRequestException(`Question #${update.id} does not belong to quiz #${id}`)
+            throw new BadRequestException(`Question #${qId} does not belong to quiz #${id}`)
           }
 
           const mergedOptions = update.options ?? existing.options
@@ -172,7 +182,7 @@ export class QuizzesService {
           if (mergedIndex < 0 || mergedIndex >= mergedOptions.length) {
             throw new BadRequestException(
               `correctOptionIndex (${mergedIndex}) is out of bounds for ` +
-                `question #${update.id}, which has ${mergedOptions.length} options`,
+                `question #${qId}, which has ${mergedOptions.length} options`,
             )
           }
 
