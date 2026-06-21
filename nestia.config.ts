@@ -9,7 +9,7 @@ const config: INestiaConfig = {
     output: 'bin/swagger.json',
     servers: [
       {
-        url: `http://localhost:${process.env.PORT}`,
+        url: String(process.env.API_URL),
         description: 'Local Server',
       },
     ],
