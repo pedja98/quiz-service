@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer'
 import { ArrayMinSize, IsArray, IsNumber, IsString, ValidateNested } from 'class-validator'
-import { QuestionResponseDto } from './question-response.dt'
+import { QuestionResponseDto } from '../../questions/dto/question-response.dt'
 
 export class QuizResponseDto {
   @IsNumber()
