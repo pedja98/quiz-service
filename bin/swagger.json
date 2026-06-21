@@ -1,0 +1,244 @@
+{
+  "openapi": "3.2.0",
+  "servers": [{ "url": "http://localhost:3003", "description": "Local Server" }],
+  "info": { "version": "0.0.1", "title": "quiz-service", "description": "", "license": { "name": "UNLICENSED" } },
+  "paths": {
+    "/quizzes": {
+      "post": {
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/CreateQuizDto" } } },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Quiz" } } }
+          }
+        },
+        "x-samchon-accessor": ["quizzes", "create"],
+        "x-samchon-controller": "QuizzesController"
+      },
+      "get": {
+        "tags": [],
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" }, "required": false },
+          { "name": "page", "in": "query", "schema": { "type": "number" }, "required": true },
+          { "name": "limit", "in": "query", "schema": { "type": "number" }, "required": true }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": { "type": "array", "items": { "$ref": "#/components/schemas/Quiz" } },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "page": { "type": "number" },
+                        "limit": { "type": "number" },
+                        "total": { "type": "number" },
+                        "totalPages": { "type": "number" }
+                      },
+                      "required": ["page", "limit", "total", "totalPages"]
+                    }
+                  },
+                  "required": ["items", "meta"]
+                }
+              }
+            }
+          }
+        },
+        "x-samchon-accessor": ["quizzes", "findAll"],
+        "x-samchon-controller": "QuizzesController"
+      }
+    },
+    "/quizzes/{id}": {
+      "get": {
+        "tags": [],
+        "parameters": [{ "name": "id", "in": "path", "schema": { "type": "number" }, "required": true }],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/QuizResponseDto" } } }
+          }
+        },
+        "x-samchon-accessor": ["quizzes", "findOne"],
+        "x-samchon-controller": "QuizzesController"
+      },
+      "patch": {
+        "tags": [],
+        "parameters": [{ "name": "id", "in": "path", "schema": { "type": "number" }, "required": true }],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UpdateQuizDto" } } },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Quiz" } } }
+          }
+        },
+        "x-samchon-accessor": ["quizzes", "update"],
+        "x-samchon-controller": "QuizzesController"
+      },
+      "delete": {
+        "tags": [],
+        "parameters": [{ "name": "id", "in": "path", "schema": { "type": "number" }, "required": true }],
+        "responses": { "200": { "description": "", "content": { "application/json": {} } } },
+        "x-samchon-accessor": ["quizzes", "remove"],
+        "x-samchon-controller": "QuizzesController"
+      }
+    },
+    "/quizzes/internal/{id}": {
+      "get": {
+        "tags": [],
+        "parameters": [{ "name": "id", "in": "path", "schema": { "type": "number" }, "required": true }],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/QuizResponseDto" } } }
+          }
+        },
+        "x-samchon-accessor": ["quizzes", "internal", "findOneInternal"],
+        "x-samchon-controller": "QuizzesController"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Quiz": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "timeLimit": { "type": "number" },
+          "questions": { "type": "array", "items": { "$ref": "#/components/schemas/Question" } },
+          "createUserId": { "type": "string" },
+          "modifyUserId": { "oneOf": [{ "type": "null" }, { "type": "string" }] },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "timeLimit",
+          "questions",
+          "createUserId",
+          "modifyUserId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "text": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" } },
+          "correctOptionIndex": { "type": "number" },
+          "quiz": { "$ref": "#/components/schemas/Quiz" },
+          "quizId": { "type": "number" },
+          "createUserId": { "type": "string" },
+          "modifyUserId": { "oneOf": [{ "type": "null" }, { "type": "string" }] },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": [
+          "id",
+          "text",
+          "options",
+          "correctOptionIndex",
+          "quiz",
+          "quizId",
+          "createUserId",
+          "modifyUserId",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateQuizDto": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "timeLimit": { "type": "string" },
+          "questions": { "type": "array", "items": { "$ref": "#/components/schemas/CreateQuestionDto" } }
+        },
+        "required": ["title", "timeLimit"]
+      },
+      "CreateQuestionDto": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" } },
+          "correctOptionIndex": { "type": "number" }
+        },
+        "required": ["text", "options", "correctOptionIndex"]
+      },
+      "ListQuizzesQueryDto": {
+        "type": "object",
+        "properties": { "search": { "type": "string" }, "page": { "type": "number" }, "limit": { "type": "number" } },
+        "required": ["page", "limit"]
+      },
+      "QuizResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "timeLimit": { "type": "number" },
+          "questions": { "type": "array", "items": { "$ref": "#/components/schemas/QuestionResponseDto" } }
+        },
+        "required": ["id", "title", "description", "timeLimit", "questions"]
+      },
+      "QuestionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "text": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" } },
+          "correctOptionIndex": { "type": "number" }
+        },
+        "required": ["id", "text", "options"]
+      },
+      "UpdateQuizDto": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "timeLimit": { "type": "string" },
+          "addQuestions": { "type": "array", "items": { "$ref": "#/components/schemas/CreateQuestionDto" } },
+          "removeQuestionIds": { "type": "array", "items": { "type": "number" } },
+          "updateQuestions": { "$ref": "#/components/schemas/RecordnumberUpdateQuestionDto" }
+        },
+        "required": []
+      },
+      "RecordnumberUpdateQuestionDto": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "description": "Construct a type with a set of properties K of type T",
+        "additionalProperties": { "$ref": "#/components/schemas/UpdateQuestionDto" }
+      },
+      "UpdateQuestionDto": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "number" },
+          "text": { "type": "string" },
+          "options": { "type": "array", "items": { "type": "string" } },
+          "correctOptionIndex": { "type": "number" }
+        },
+        "required": ["id"]
+      }
+    }
+  },
+  "tags": [],
+  "x-typia-emended-v12": true
+}
