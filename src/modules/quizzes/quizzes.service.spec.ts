@@ -9,6 +9,8 @@ import { UserRole } from '../../enums/user-role.enum'
 import { CreateQuizDto } from './dto/create-quiz.dto'
 import { UpdateQuizDto } from './dto/update-quiz.dto'
 
+type SavedEntity = Partial<Quiz> | Partial<Question>
+
 describe('QuizzesService', () => {
   let service: QuizzesService
   let quizRepository: jest.Mocked<Repository<Quiz>>
@@ -51,7 +53,7 @@ describe('QuizzesService', () => {
     }
 
     dataSource = {
-      transaction: jest.fn(async (cb: (manager: unknown) => unknown) => cb(manager)),
+      transaction: jest.fn(async (cb: (manager: unknown) => unknown) => await cb(manager)),
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -90,11 +92,11 @@ describe('QuizzesService', () => {
 
     beforeEach(() => {
       manager.create.mockImplementation((entity: unknown, data: Record<string, unknown>) => ({ ...data }))
-      manager.save.mockImplementation(async (entity: any) => {
+      manager.save.mockImplementation(async (entity: SavedEntity | SavedEntity[]) => {
         if (Array.isArray(entity)) {
-          return entity.map((e, i) => ({ ...e, id: 100 + i }))
+          return await entity.map((e, i) => ({ ...e, id: 100 + i }))
         }
-        return { ...entity, id: 1 }
+        return await { ...entity, id: 1 }
       })
       manager.findOne.mockResolvedValue(baseQuiz)
     })
@@ -132,7 +134,7 @@ describe('QuizzesService', () => {
     })
 
     it('does not attempt to save questions when none are provided', async () => {
-      const { ...dtoWithoutQuestions } = dto
+      const { questions, ...dtoWithoutQuestions } = dto
       await service.create('6c6d794d-45bf-47fa-a35e-33d029990860', dtoWithoutQuestions)
 
       expect(manager.save).toHaveBeenCalledTimes(1)
@@ -239,7 +241,7 @@ describe('QuizzesService', () => {
     const cloneBaseQuiz = (): Quiz => JSON.parse(JSON.stringify(baseQuiz))
 
     beforeEach(() => {
-      manager.save.mockImplementation(async (entity: unknown) => entity)
+      manager.save.mockImplementation(async (entity: unknown) => await entity)
       manager.create.mockImplementation((entity: unknown, data: Record<string, unknown>) => ({ ...data }))
     })
 
