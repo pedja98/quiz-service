@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer'
 import { ArrayMinSize, IsArray, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { IsDurationString } from '../validators/is-duration-string.validator'
-import { CreateQuestionDto } from 'src/modules/questions/dto/create-question.dto'
+import { CreateQuestionDto } from '../../questions/dto/create-question.dto'
 
 export class CreateQuizDto {
   @IsString()

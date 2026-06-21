@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer'
 import { ArrayMinSize, IsArray, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { IsDurationString } from '../validators/is-duration-string.validator'
-import { CreateQuestionDto } from 'src/modules/questions/dto/create-question.dto'
-import { UpdateQuestionDto } from 'src/modules/questions/dto/update-question.dto'
+import { CreateQuestionDto } from '../../questions/dto/create-question.dto'
+import { UpdateQuestionDto } from '../../questions/dto/update-question.dto'
 import { IsNumberKeyObject } from '../validators/is-number-key-object.decorator'
 
 export class UpdateQuizDto {

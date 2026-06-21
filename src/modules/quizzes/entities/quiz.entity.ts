@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm'
-import { Question } from 'src/modules/quizzes/entities/question.entity'
+import { Question } from '../../questions/entities/question.entity'
 
 @Entity('quizzes')
 export class Quiz {

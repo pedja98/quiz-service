@@ -1,4 +1,4 @@
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator'
+import { registerDecorator, ValidationOptions } from 'class-validator'
 
 export function IsNumberKeyObject(validationOptions?: ValidationOptions) {
   return function (object: object, propertyName: string) {
@@ -8,7 +8,7 @@ export function IsNumberKeyObject(validationOptions?: ValidationOptions) {
       propertyName,
       options: validationOptions,
       validator: {
-        validate(value: unknown, args: ValidationArguments) {
+        validate(value: unknown) {
           if (typeof value !== 'object' || value === null) {
             return false
           }

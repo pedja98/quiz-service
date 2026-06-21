@@ -12,7 +12,7 @@ export class QuestionResponseDto {
 
   @IsArray()
   @IsString({ each: true })
-  @ApiProperty({ type: Array<String> })
+  @ApiProperty({ type: Array<string> })
   options!: string[]
 
   @IsOptional()

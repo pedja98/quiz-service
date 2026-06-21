@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common'
-import { UserRole } from 'src/enums/user-role.enum'
-import { RequestWithUser } from 'src/types/request-with-user.types'
+import { UserRole } from '../enums/user-role.enum'
+import { RequestWithUser } from '../types/request-with-user.types'
 
 @Injectable()
 export class AuthGuard implements CanActivate {

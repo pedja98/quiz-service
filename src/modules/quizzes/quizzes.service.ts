@@ -1,14 +1,14 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { DataSource, Repository } from 'typeorm'
-import { Quiz } from '../questions/entities/quiz.entity'
-import { Question } from 'src/modules/quizzes/entities/question.entity'
+import { Quiz } from './entities/quiz.entity'
 import { CreateQuizDto } from './dto/create-quiz.dto'
 import { UpdateQuizDto } from './dto/update-quiz.dto'
 import { ListQuizzesQueryDto } from './dto/list-quizzes-query.dto'
 import { durationToMs } from './utils/duration.util'
-import { UserRole } from 'src/enums/user-role.enum'
+import { UserRole } from '../../enums/user-role.enum'
 import { QuizResponseDto } from './dto/quiz-response.dto'
+import { Question } from '../questions/entities/question.entity'
 
 @Injectable()
 export class QuizzesService {

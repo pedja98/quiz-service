@@ -3,9 +3,9 @@ import { QuizzesService } from './quizzes.service'
 import { CreateQuizDto } from './dto/create-quiz.dto'
 import { UpdateQuizDto } from './dto/update-quiz.dto'
 import { ListQuizzesQueryDto } from './dto/list-quizzes-query.dto'
-import { User } from 'src/decorators/user.decorator'
-import { Roles } from 'src/decorators/roles.decorator'
-import { AuthUser } from 'src/types/auth-user.types'
+import { User } from '../../decorators/user.decorator'
+import { Roles } from '../../decorators/roles.decorator'
+import { AuthUser } from '../../types/auth-user.types'
 
 @Controller('quizzes')
 export class QuizzesController {
